@@ -62,7 +62,7 @@ def PvP():
 
             ship_coordinates.append(coordinate)
             coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] = "X"
-
+            
             print(field())
             
             i+=1
@@ -156,7 +156,7 @@ def PvC():
 
     def start(coordinates):
         print(field())
-        print("Put your ships")
+        print("Place your ships")
 
         i = 0
         while i < 20:
@@ -172,6 +172,7 @@ def PvC():
             
             player_ship_coordinates.append(coordinate)
             coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] = "X"
+            
             print(field())
             
             i+=1
@@ -225,7 +226,7 @@ def PvC():
                     try:
                         selectable_coordinates.remove(coo)
                     except:
-                        pass
+                        continue
                 ###
             
                 start_coordinate = random.choice(selectable_coordinates)
@@ -244,7 +245,7 @@ def PvC():
                     try:
                         selectable_coordinates.remove(coo)
                     except:
-                        pass
+                        continue
                 ###
 
                 start_coordinate = random.choice(selectable_coordinates)
@@ -268,7 +269,7 @@ def PvC():
                     try:
                         selectable_coordinates.remove(coo)
                     except:
-                        pass
+                        continue
                 ###
             
                 start_coordinate = random.choice(selectable_coordinates)
@@ -286,7 +287,7 @@ def PvC():
                     try:
                         selectable_coordinates.remove(coo)
                     except:
-                        pass
+                        continue
                 ###
 
                 start_coordinate = random.choice(selectable_coordinates)
@@ -306,7 +307,7 @@ def PvC():
                 try:
                     selectable_coordinates.remove(coo)
                 except:
-                    pass
+                    continue
             ###
             
             start_coordinate = random.choice(selectable_coordinates)
@@ -392,7 +393,8 @@ Your ships:
     ##   x 3
     #    x 4
 
-You can place your ships horizontally or vertically. You must enter 20 coordinates in total. After you place all your ships, the playground will be cleared. After clearing the playing field, you can start guessing your opponent's ships. In PVP mode, two players must connect to the server before you start placing your ships.
+You can place your ships horizontally or vertically. You must enter 20 coordinates in total. After you place all your ships, the playground will be cleared. After clearing the playing field, you can start guessing your opponent's ships. In PVP mode, two players must connect to the server before you start placing your ships. 
+    If you can shot a ship, will be 'X'. If you can't shot a ship, will be 'O'.
 """)
         else:
             continue
