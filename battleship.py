@@ -116,7 +116,7 @@ def PvP():
 
 def PvC():
     player_ship_coordinates = []
-    computer_ship_coordinates = []
+    csc = [] # computer_ship_coordinates
     coordinates = [" " for i in range(100)]
     coordinate_value = {"A":0, "B":10, "C":20, "D":30, "E":40, "F":50, "G":60, "H":70, "I":80, "J":90}
 
@@ -191,10 +191,10 @@ def PvC():
                 ###
 
                 start_coordinate = random.choice(selectable_coordinates)
-                computer_ship_coordinates.append(start_coordinate) 
-                computer_ship_coordinates.append(start_coordinate[0]+str(int(start_coordinate[1])+1))
-                computer_ship_coordinates.append(start_coordinate[0]+str(int(start_coordinate[1])+2))
-                computer_ship_coordinates.append(start_coordinate[0]+str(int(start_coordinate[1])+3))
+                csc.append(start_coordinate)
+                csc.append(start_coordinate[0]+str(int(start_coordinate[1])+1))
+                csc.append(start_coordinate[0]+str(int(start_coordinate[1])+2))
+                csc.append(start_coordinate[0]+str(int(start_coordinate[1])+3))
 
             if direction == "v":
                 # selectable coordinates for 4 block length ship (vertical)
@@ -205,10 +205,10 @@ def PvC():
                 ###
                 
                 start_coordinate = random.choice(selectable_coordinates)
-                computer_ship_coordinates.append(start_coordinate)
-                computer_ship_coordinates.append(chr(ord(start_coordinate[0])+1)+start_coordinate[1])
-                computer_ship_coordinates.append(chr(ord(start_coordinate[0])+2)+start_coordinate[1])
-                computer_ship_coordinates.append(chr(ord(start_coordinate[0])+3)+start_coordinate[1])
+                csc.append(start_coordinate)
+                csc.append(chr(ord(start_coordinate[0])+1)+start_coordinate[1])
+                csc.append(chr(ord(start_coordinate[0])+2)+start_coordinate[1])
+                csc.append(chr(ord(start_coordinate[0])+3)+start_coordinate[1])
         ###
 
         # 3 block length ship x 2
@@ -222,17 +222,28 @@ def PvC():
                     for j in range(0, 8):
                         selectable_coordinates.append(char+str(j))
 
-                for coo in computer_ship_coordinates:
+                for coo in csc:
                     try:
                         selectable_coordinates.remove(coo)
                     except:
                         continue
                 ###
-            
-                start_coordinate = random.choice(selectable_coordinates)
-                computer_ship_coordinates.append(start_coordinate)
-                computer_ship_coordinates.append(start_coordinate[0]+str(int(start_coordinate[1])+1))
-                computer_ship_coordinates.append(start_coordinate[0]+str(int(start_coordinate[1])+2))
+                
+                while True:
+                    start_coordinate = random.choice(selectable_coordinates)
+                    c0 = start_coordinate # coordinate0
+                    c1 = start_coordinate[0]+str(int(start_coordinate[1])+1) # coordinate1
+                    c2 = start_coordinate[0]+str(int(start_coordinate[1])+2) # coordinate2
+
+                    if (c1 in csc) or (c2 in csc):
+                        selectable_coordinates.remove(start_coordinate)
+                        continue
+
+                    else:
+                        csc.append(c0)
+                        csc.append(c1)
+                        csc.append(c2)
+                        break
 
             if direction == "v":
                 # selectable coordinates for 3 block length ship (vertical)
@@ -241,17 +252,29 @@ def PvC():
                     for j in range(0, 10):
                         selectable_coordinates.append(char+str(j))
 
-                for coo in computer_ship_coordinates:
+                for coo in csc:
                     try:
                         selectable_coordinates.remove(coo)
                     except:
                         continue
                 ###
+                
+                while True:
+                    start_coordinate = random.choice(selectable_coordinates)
+                    c0 = start_coordinate # coordinate0
+                    c1 = chr(ord(start_coordinate[0])+1)+start_coordinate[1] # coordinate1
+                    c2 = chr(ord(start_coordinate[0])+2)+start_coordinate[1] # coordinate2
 
-                start_coordinate = random.choice(selectable_coordinates)
-                computer_ship_coordinates.append(start_coordinate)
-                computer_ship_coordinates.append(chr(ord(start_coordinate[0])+1)+start_coordinate[1])
-                computer_ship_coordinates.append(chr(ord(start_coordinate[0])+2)+start_coordinate[1])
+                    if (c1 in csc) or (c2 in csc):
+                        selectable_coordinates.remove(start_coordinate)
+                        continue
+
+                    else:
+                        csc.append(c0)
+                        csc.append(c1)
+                        csc.append(c2)
+                        break
+
         ###
 
         # 2 block length ship x 3
@@ -265,16 +288,26 @@ def PvC():
                     for j in range(0, 9):
                         selectable_coordinates.append(char+str(j))
 
-                for coo in computer_ship_coordinates:
+                for coo in csc:
                     try:
                         selectable_coordinates.remove(coo)
                     except:
                         continue
                 ###
-            
-                start_coordinate = random.choice(selectable_coordinates)
-                computer_ship_coordinates.append(start_coordinate)
-                computer_ship_coordinates.append(start_coordinate[0]+str(int(start_coordinate[1])+1))
+                
+                while True:
+                    start_coordinate = random.choice(selectable_coordinates)
+                    c0 = start_coordinate
+                    c1 = start_coordinate[0]+str(int(start_coordinate[1])+1)
+
+                    if (c1 in csc):
+                        selectable_coordinates.remove(start_coordinate)
+                        continue
+
+                    else:
+                        csc.append(c0)
+                        csc.append(c1)
+                        break
 
             if direction == "v":
                 # selectable coordinates for 2 block length ship (vertical)
@@ -283,16 +316,26 @@ def PvC():
                     for j in range(0, 10):
                         selectable_coordinates.append(char+str(j))
 
-                for coo in computer_ship_coordinates:
+                for coo in csc:
                     try:
                         selectable_coordinates.remove(coo)
                     except:
                         continue
                 ###
+                
+                while True:
+                    start_coordinate = random.choice(selectable_coordinates)
+                    c0 = start_coordinate
+                    c1 = chr(ord(start_coordinate[0])+1)+start_coordinate[1]
 
-                start_coordinate = random.choice(selectable_coordinates)
-                computer_ship_coordinates.append(start_coordinate)
-                computer_ship_coordinates.append(chr(ord(start_coordinate[0])+1)+start_coordinate[1])
+                    if (c1 in csc):
+                        selectable_coordinates.remove(start_coordinate)
+                        continue
+
+                    else:
+                        csc.append(c0)
+                        csc.append(c1)
+                        break
         ###
             
         # 1 block length ship x 4
@@ -303,7 +346,7 @@ def PvC():
                 for j in range(0, 10):
                     selectable_coordinates.append(char+str(j))
 
-            for coo in computer_ship_coordinates:
+            for coo in csc:
                 try:
                     selectable_coordinates.remove(coo)
                 except:
@@ -311,7 +354,7 @@ def PvC():
             ###
             
             start_coordinate = random.choice(selectable_coordinates)
-            computer_ship_coordinates.append(start_coordinate) 
+            csc.append(start_coordinate)
         ###
 
     start(coordinates)
@@ -334,7 +377,7 @@ def PvC():
             print("You already shot it!")
             continue
         
-        if coordinate in computer_ship_coordinates:
+        if coordinate in csc:
             char = "X"
             player_shot += 1
         else:
