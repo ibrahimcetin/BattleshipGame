@@ -236,7 +236,6 @@ def PvC():
                     c2 = start_coordinate[0]+str(int(start_coordinate[1])+2) # coordinate2
 
                     if (c1 in csc) or (c2 in csc):
-                        selectable_coordinates.remove(start_coordinate)
                         continue
 
                     else:
@@ -266,7 +265,6 @@ def PvC():
                     c2 = chr(ord(start_coordinate[0])+2)+start_coordinate[1] # coordinate2
 
                     if (c1 in csc) or (c2 in csc):
-                        selectable_coordinates.remove(start_coordinate)
                         continue
 
                     else:
@@ -301,7 +299,6 @@ def PvC():
                     c1 = start_coordinate[0]+str(int(start_coordinate[1])+1)
 
                     if (c1 in csc):
-                        selectable_coordinates.remove(start_coordinate)
                         continue
 
                     else:
@@ -329,7 +326,6 @@ def PvC():
                     c1 = chr(ord(start_coordinate[0])+1)+start_coordinate[1]
 
                     if (c1 in csc):
-                        selectable_coordinates.remove(start_coordinate)
                         continue
 
                     else:
