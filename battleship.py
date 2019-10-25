@@ -1,6 +1,7 @@
 from socket import socket, AF_INET, SOCK_STREAM
 import pickle
 import random
+import sys
 
 def PvP():
     server = socket(AF_INET, SOCK_STREAM)
@@ -8,6 +9,7 @@ def PvP():
         server.connect(("", 2001))
     except:
         print("Please make sure you turn on the server and check your connection settings.")
+        sys.exit()
 
     ship_coordinates = []
     coordinates = [" " for i in range(100)]
