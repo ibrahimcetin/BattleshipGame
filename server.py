@@ -13,14 +13,16 @@ print(f"{player1_addr[0]} has been connected")
 player2, player2_addr = socket.accept() # accept player2
 print(f"{player2_addr[0]} has been connected")
 
-player1_coordinates = pickle.loads(player1.recv(1024)) # recv player1 ship coordinates
-player2_coordinates = pickle.loads(player2.recv(1024)) # recv player2 ship coordinates
-
 player1_win = False
 player2_win = False
 
 player1_shot = 0
 player2_shot = 0
+
+player1_coordinates = pickle.loads(player1.recv(1024)) # recv player1 ship coordinates
+player2_coordinates = pickle.loads(player2.recv(1024)) # recv player2 ship coordinates
+
+
 while True:
     # send ready to player1
     if player2_win:

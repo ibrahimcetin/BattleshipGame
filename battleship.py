@@ -12,11 +12,13 @@ def PvP():
         sys.exit()
 
     ship_coordinates = []
-    coordinates = [" " for i in range(100)]
+    field_coordinates = [" " for i in range(100)]
     coordinate_value = {"A":0, "B":10, "C":20, "D":30, "E":40, "F":50, "G":60, "H":70, "I":80, "J":90}
 
     player1_shot = 0
     player2_shot = 0
+
+    prev_coordinates = [] # for 'undo'
 
     def field():
         return ("""
@@ -44,9 +46,9 @@ def PvP():
        -----------------------------------------
     J  | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} |
        -----------------------------------------
-        """.format(player1_shot, player2_shot, *coordinates))
+        """.format(player1_shot, player2_shot, *field_coordinates))
 
-    def start(coordinates):
+    def start(field_coordinates):
         print(field())
         print("Place your ships")
 
@@ -54,53 +56,76 @@ def PvP():
         while i < 20:
             coordinate = input("Coordinate: ")
 
+            if coordinate == "undo":
+                i -= 1
+
+                ship_coordinates.pop()
+                field_coordinates[prev_coordinates[-1]] = ' '
+
+                prev_coordinates.pop()
+
+                print(field())
+                continue
+
             if (len(coordinate) < 2) or (len(coordinate) > 2) or (coordinate[0] not in "ABCDEFGHIJ") or (coordinate[1] not in "1234567890"):
                 print("Please enter a letter between A-J first and then enter a number between 0-9. Sample: D6")
                 continue
-            
-            if coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] != " ":
+
+            if field_coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] != " ":
                 print("There are already ship in there!")
                 continue
 
             ship_coordinates.append(coordinate)
-            coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] = "X"
-            
+
+            index = coordinate_value[coordinate[0]]+int(coordinate[1])
+            field_coordinates[index] = "X"
+
+            prev_coordinates.append(index)
+
             print(field())
             
             i+=1
 
         server.send(pickle.dumps(ship_coordinates))
 
-    start(coordinates)
+    start(field_coordinates)
     
-    coordinates = [" " for i in range(100)] # clear field
+    field_coordinates = [" " for i in range(100)] # clear field
     print(field())
     print("Please wait other player")
 
+    shot_available = False # for "already shot it" if statement
     while True:
-        data = pickle.loads(server.recv(1024))
+        if shot_available == False:
+            data = pickle.loads(server.recv(1024))
+            shot_available = True
+        else:
+            pass
 
-        if data[0] == "ready": 
+        if data[0] == "ready":
             coordinate = input("Coordinate: ")
+
             if (len(coordinate) < 2) or (len(coordinate) > 2) or (coordinate[0] not in "ABCDEFGHIJ") or (coordinate[1] not in "1234567890"):
                 print("Please enter a letter between A-J first and then enter a number between 0-9. Sample: D6")
                 continue
 
-            if coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] != " ":
+            if field_coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] != " ":
                 print("You already shot it!")
                 continue
-        
+
+            shot_available = False
+
             server.send(bytes(coordinate, "utf-8"))
             data = pickle.loads(server.recv(1024))
-        
-            coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] = data[0]
-            
+
+            field_coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] = data[0]
+
             player1_shot = data[1]
             player2_shot = data[2]
 
             print(field())
             print("Please wait other player")
-        
+
         elif data[0] == "refresh":
             player1_shot = data[1]
             player2_shot = data[2]
@@ -111,25 +136,29 @@ def PvP():
         else:
             player1_shot = data[1]
             player2_shot = data[2]
-            
+
             print(field())
             print(data[0]) # print winner
+
 
 
 def PvC():
     player_ship_coordinates = []
     csc = [] # computer_ship_coordinates
-    coordinates = [" " for i in range(100)]
+    field_coordinates = [" " for i in range(100)]
     coordinate_value = {"A":0, "B":10, "C":20, "D":30, "E":40, "F":50, "G":60, "H":70, "I":80, "J":90}
 
     player_shot = 0
     computer_shot = 0
 
+    prev_coordinates = [] # for 'undo'
+
     def char_range(c1, c2):
         for c in range(ord(c1), ord(c2)):
             yield chr(c)
 
-    def field():                                                                                return ("""
+    def field():
+        return ("""
            player: {}             computer: {}
 
          0   1   2   3   4   5   6   7   8   9
@@ -154,9 +183,9 @@ def PvC():
        -----------------------------------------
     J  | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} |
        -----------------------------------------
-        """.format(player_shot, computer_shot, *coordinates))
+        """.format(player_shot, computer_shot, *field_coordinates))
 
-    def start(coordinates):
+    def start(field_coordinates):
         print(field())
         print("Place your ships")
 
@@ -164,26 +193,41 @@ def PvC():
         while i < 20:
             coordinate = input("Coordinate: ")
 
+            if coordinate == "undo":
+                i -= 1
+
+                player_ship_coordinates.pop()
+                field_coordinates[prev_coordinates[-1]] = ' '
+
+                prev_coordinates.pop()
+
+                print(field())
+                continue
+
             if (len(coordinate) < 2) or (len(coordinate) > 2) or (coordinate[0] not in "ABCDEFGHIJ") or (coordinate[1] not in "1234567890"):
                 print("Please enter a letter between A-J first and then enter a number between 0-9. Sample: D6")
                 continue
 
-            if coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] != " ":
+            if field_coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] != " ":
                 print("There are already ship in there!")
                 continue
-            
+
             player_ship_coordinates.append(coordinate)
-            coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] = "X"
-            
+
+            index = coordinate_value[coordinate[0]]+int(coordinate[1])
+            field_coordinates[index] = "X"
+
+            prev_coordinates.append(index)
+
             print(field())
-            
+
             i+=1
 
     def ai_start():
         # 4 block length ship x 1
         for i in range(1):
             direction = random.choice(["h", "v"])
-            
+
             if direction == "h":
                 # selectable coordinates for 4 block length ship (horizontal)
                 selectable_coordinates = []
@@ -205,7 +249,7 @@ def PvC():
                     for j in range(0, 10):
                         selectable_coordinates.append(char+str(j))
                 ###
-                
+
                 start_coordinate = random.choice(selectable_coordinates)
                 csc.append(start_coordinate)
                 csc.append(chr(ord(start_coordinate[0])+1)+start_coordinate[1])
@@ -230,7 +274,7 @@ def PvC():
                     except:
                         continue
                 ###
-                
+
                 while True:
                     start_coordinate = random.choice(selectable_coordinates)
                     c0 = start_coordinate # coordinate0
@@ -259,7 +303,7 @@ def PvC():
                     except:
                         continue
                 ###
-                
+
                 while True:
                     start_coordinate = random.choice(selectable_coordinates)
                     c0 = start_coordinate # coordinate0
@@ -294,7 +338,7 @@ def PvC():
                     except:
                         continue
                 ###
-                
+
                 while True:
                     start_coordinate = random.choice(selectable_coordinates)
                     c0 = start_coordinate
@@ -321,7 +365,7 @@ def PvC():
                     except:
                         continue
                 ###
-                
+
                 while True:
                     start_coordinate = random.choice(selectable_coordinates)
                     c0 = start_coordinate
@@ -335,7 +379,7 @@ def PvC():
                         csc.append(c1)
                         break
         ###
-            
+
         # 1 block length ship x 4
         for i in range(4):
             # selectable coordinates for 1 block length ship
@@ -350,15 +394,15 @@ def PvC():
                 except:
                     continue
             ###
-            
+
             start_coordinate = random.choice(selectable_coordinates)
             csc.append(start_coordinate)
         ###
 
-    start(coordinates)
+    start(field_coordinates)
     ai_start()
-   
-    coordinates = [" " for i in range(100)] # clear field
+
+    field_coordinates = [" " for i in range(100)] # clear field
     print(field())
     print("Battle")
 
@@ -366,22 +410,22 @@ def PvC():
     while True:
         # player
         coordinate = input("Coordinate: ")
-        
+
         if (len(coordinate) < 2) or (len(coordinate) > 2) or (coordinate[0] not in "ABCDEFGHIJ") or (coordinate[1] not in "1234567890"):
             print("Please enter a letter between A-J first and then enter a number between 0-9. Sample: D6")
             continue
 
-        if coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] != " ":
+        if field_coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] != " ":
             print("You already shot it!")
             continue
-        
+
         if coordinate in csc:
             char = "X"
             player_shot += 1
         else:
             char = "O"
-    
-        coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] = char
+
+        field_coordinates[coordinate_value[coordinate[0]]+int(coordinate[1])] = char
 
         print(field())
 
